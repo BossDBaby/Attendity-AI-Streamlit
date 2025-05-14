@@ -1,0 +1,17 @@
+{
+  "admin": {
+    "password": "$2b$12$7DVdf0ERL3i1ul1WpKfJqe8sxg5xuyeqJIXnZO3nLTR4fsTRVERSi",
+    "role": "admin",
+    "name": "Admin"
+  },
+  "student1": {
+    "password": "$2b$12$5ZaktZDhNbeffGfwN0AyleCzS5HMDd.tWBQZbFddmJHAlRz2Uzpgm",
+    "role": "student",
+    "name": "Devid"
+  },
+  "student2": {
+    "password": "$2b$12$5ZaktZDhNbeffGfwN0AyleCzS5HMDd.tWBQZbFddmJHAlRz2Uzpgm",
+    "role": "student",
+    "name": "Chelvin"
+  }
+}
