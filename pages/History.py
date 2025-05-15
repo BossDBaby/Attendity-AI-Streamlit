@@ -4,14 +4,25 @@ import os
 
 st.set_page_config(page_title="History - Attendity")
 
-st.sidebar.page_link("app.py", label="Log Out")
+# 🔒 Authentication check
+if not st.session_state.get("logged_in"):
+    st.switch_page("pages/Login.py")
+
+# Buttons
+st.sidebar.markdown("### Account")
+st.sidebar.button("🔓 Log Out", on_click=lambda: [st.session_state.clear(), st.rerun()])
 st.sidebar.page_link("pages/Home.py", label="Home", icon="🏠")
-st.sidebar.page_link("pages/Attendance.py", label="Attendance", icon="🧍")
 st.sidebar.page_link("pages/History.py", label="History", icon="📊")
 
 st.title("📊 Attendance History")
 
 ATTENDANCE_FILE = "data/attendance.csv"
+
+# 🛠 Admin tools (only if admin)
+if st.session_state.get("is_admin"):
+    st.sidebar.divider()
+    st.sidebar.markdown("### Admin Section")
+    st.sidebar.page_link("pages/Admin.py", label="Admin Panel", icon="🛠")
 
 if not os.path.exists(ATTENDANCE_FILE):
     st.warning("No attendance record found yet.")

@@ -2,19 +2,26 @@ import streamlit as st
 import pandas as pd
 import os
 import json
+from utils.auth import hash_password
 
 st.set_page_config(page_title="Admin Panel - Attendity")
 
-if not st.session_state.get('is_admin'):
-    st.error("You are not authorized to view this page.")
-    st.stop()
+# 🔒 Protect the page
+if not st.session_state.get("logged_in") or not st.session_state.get("is_admin"):
+    st.switch_page("pages/Login.py")
 
-st.sidebar.page_link("app.py", label="Log Out")
-st.sidebar.page_link("pages/1_Home.py", label="Home", icon="🏠")
-st.sidebar.page_link("pages/2_Attendance.py", label="Attendance", icon="🧍")
-st.sidebar.page_link("pages/3_History.py", label="History", icon="📊")
-st.sidebar.page_link("pages/4_Admin.py", label="Admin Panel", icon="🛠")
+# 🚪 Logout button
+st.sidebar.markdown("### Account")
+st.sidebar.button("🔓 Log Out", on_click=lambda: [st.session_state.clear(), st.rerun()])
 
+# 🧭 Navigation
+st.sidebar.page_link("pages/Home.py", label="Home", icon="🏠")
+st.sidebar.page_link("pages/History.py", label="History", icon="📊")
+st.sidebar.divider()
+st.sidebar.markdown("### Admin Section")
+st.sidebar.page_link("pages/Admin.py", label="Admin Panel", icon="🛠")
+
+# 🛠 Admin content
 st.title("🛠 Admin Panel")
 
 # === 📋 View Attendance Data ===
@@ -51,23 +58,20 @@ with st.form("add_student_form"):
                 with open("data/users.json", "r") as f:
                     users = json.load(f)
             except FileNotFoundError:
-                users = []
+                users = {}
 
-            if any(user["username"] == new_username for user in users):
+            if new_username in users:
                 st.error("Username already exists.")
             else:
-                users.append({
-                    "username": new_username,
-                    "password": new_password,
+                users[new_username] = {
+                    "password": hash_password(new_password),
                     "name": new_name,
                     "email": new_email,
                     "role": "student"
-                })
+                }
 
                 with open("data/users.json", "w") as f:
                     json.dump(users, f, indent=4)
 
                 st.success(f"Student '{new_username}' added successfully.")
-
-                st.info("📷 Please upload a facial photo for this student to `assets/user_photos/` with filename: **" + new_username + ".jpg**")
-
+                st.info("📷 Please upload a facial photo to `assets/user_photos/` named: **{new_username}.jpg**")
