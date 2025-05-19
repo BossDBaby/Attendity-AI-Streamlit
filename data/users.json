@@ -1,17 +1,26 @@
 {
-  "admin": {
-    "password": "$2b$12$7DVdf0ERL3i1ul1WpKfJqe8sxg5xuyeqJIXnZO3nLTR4fsTRVERSi",
-    "role": "admin",
-    "name": "Admin"
-  },
-  "student1": {
-    "password": "$2b$12$5ZaktZDhNbeffGfwN0AyleCzS5HMDd.tWBQZbFddmJHAlRz2Uzpgm",
-    "role": "student",
-    "name": "Devid"
-  },
-  "student2": {
-    "password": "$2b$12$5ZaktZDhNbeffGfwN0AyleCzS5HMDd.tWBQZbFddmJHAlRz2Uzpgm",
-    "role": "student",
-    "name": "Chelvin"
-  }
+    "admin": {
+        "password": "$2b$12$7DVdf0ERL3i1ul1WpKfJqe8sxg5xuyeqJIXnZO3nLTR4fsTRVERSi",
+        "name": "Admin",
+        "email": "admin@kalbis.ac.id",
+        "role": "admin"
+    },
+    "student1": {
+        "password": "$2b$12$5ZaktZDhNbeffGfwN0AyleCzS5HMDd.tWBQZbFddmJHAlRz2Uzpgm",
+        "name": "Louis Devid",
+        "email": "student1@student.kalbis.ac.id",
+        "role": "student"
+    },
+    "student2": {
+        "password": "$2b$12$5ZaktZDhNbeffGfwN0AyleCzS5HMDd.tWBQZbFddmJHAlRz2Uzpgm",
+        "name": "Chelvin",
+        "email": "student2@student.kalbis.ac.id",
+        "role": "student"
+    },
+    "2023105533": {
+        "password": "$2b$12$vahgyLDLtK0yID8ggZKxBe0FciUb7Wb9u90Y2qIZhM2I3XV4exVdy",
+        "name": "Catur Bakti Prajna",
+        "email": "2023105533@student.kalbis.ac.id",
+        "role": "student"
+    }
 }
