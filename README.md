@@ -1,6 +1,6 @@
 # Attendity 📷🧑‍🏫
 
-Attendity is a facial-recognition based student attendance system built using Streamlit and Python.
+Attendity is a facial-recognition based student attendance system built using Streamlit and Python 3.10.17.
 
 ## ✨ Features
 
