@@ -6,6 +6,7 @@ import pandas as pd
 from datetime import datetime
 from face_recognition_model import load_user_encoding
 from PIL import Image
+import cv2
 
 st.set_page_config(page_title="Attendance - Attendity")
 
@@ -63,56 +64,76 @@ if user_encoding is None:
 st.markdown("### Mark your attendance")
 st.info("You can either upload your face image or take a snapshot using your webcam.")
 
+# Utility: Resize image
+def resize_image(image_np, max_width=640):
+    height, width = image_np.shape[:2]
+    if width > max_width:
+        ratio = max_width / width
+        new_size = (int(width * ratio), int(height * ratio))
+        return cv2.resize(image_np, new_size)
+    return image_np
+
+# Process face image
+def process_face_image(image_np):
+    try:
+        image_np = resize_image(image_np)
+
+        with st.spinner("Processing image..."):
+            face_encodings = face_recognition.face_encodings(image_np)
+
+            if not face_encodings:
+                st.error("No face detected. Please provide a clearer image.")
+                return
+            elif len(face_encodings) > 1:
+                st.error("Multiple faces detected. Please ensure only one face is visible.")
+                return
+
+            uploaded_encoding = face_encodings[0]
+            distance = face_recognition.face_distance([user_encoding], uploaded_encoding)[0]
+            confidence = 1 - distance
+
+            if distance <= FACE_MATCH_THRESHOLD:
+                now = datetime.now()
+                now_str = now.strftime("%Y-%m-%d %H:%M:%S")
+                today = now.date()
+
+                already_checked_in = (
+                    (df['Name'] == username) &
+                    (pd.to_datetime(df['Time']).dt.date == today)
+                ).any()
+
+                if already_checked_in:
+                    st.warning(f"{username} already checked in today!")
+                else:
+                    df.loc[len(df.index)] = [username, now_str]
+                    df.to_csv(ATTENDANCE_FILE, index=False)
+                    st.success(f"{username} checked in at {now.strftime('%H:%M:%S')}")
+                st.info(f"Recognition confidence: {confidence:.2f}")
+            else:
+                st.error("Face does not match your registered photo.")
+                st.info(f"Recognition confidence: {confidence:.2f}")
+    except Exception as e:
+        st.error(f"Error during face processing: {str(e)}")
+
 # --- Webcam snapshot ---
 img_file_buffer = st.camera_input("Take a picture")
 
-def process_face_image(image):
-    if isinstance(image, Image.Image):
-        img = np.array(image)
-    else:
-        img = image
-
-    face_encodings = face_recognition.face_encodings(img)
-
-    if not face_encodings:
-        st.error("No face detected. Please provide a clearer image.")
-        return
-
-    uploaded_encoding = face_encodings[0]
-    distance = face_recognition.face_distance([user_encoding], uploaded_encoding)[0]
-    confidence = 1 - distance
-
-    if distance <= FACE_MATCH_THRESHOLD:
-        now = datetime.now()
-        now_str = now.strftime("%Y-%m-%d %H:%M:%S")
-        today = now.date()
-
-        already_checked_in = (
-            (df['Name'] == username) &
-            (pd.to_datetime(df['Time']).dt.date == today)
-        ).any()
-
-        if already_checked_in:
-            st.warning(f"{username} already checked in today!")
-        else:
-            df.loc[len(df.index)] = [username, now_str]
-            df.to_csv(ATTENDANCE_FILE, index=False)
-            st.success(f"{username} checked in at {now.strftime('%H:%M:%S')}")
-        st.info(f"Recognition confidence: {confidence:.2f}")
-    else:
-        st.error("Face does not match your registered photo.")
-        st.info(f"Recognition confidence: {confidence:.2f}")
-
-# If image from webcam
 if img_file_buffer is not None:
-    image = Image.open(img_file_buffer)
-    st.image(image, caption="Captured Image", use_column_width=True)
-    process_face_image(np.array(image)[:, :, ::-1])  # Convert RGB to BGR
+    try:
+        image = Image.open(img_file_buffer)
+        st.image(image, caption="Captured Image", use_column_width=True)
+        image_np = np.array(image)[:, :, ::-1]  # Convert RGB to BGR
+        process_face_image(image_np)
+    except Exception as e:
+        st.error(f"Error loading webcam image: {str(e)}")
 
 # --- File upload option ---
 uploaded_file = st.file_uploader("Or upload your face image", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
-    uploaded_img = face_recognition.load_image_file(uploaded_file)
-    st.image(uploaded_img, caption="Uploaded Image", use_column_width=True)
-    process_face_image(uploaded_img)
+    try:
+        uploaded_img = face_recognition.load_image_file(uploaded_file)
+        st.image(uploaded_img, caption="Uploaded Image", use_column_width=True)
+        process_face_image(uploaded_img)
+    except Exception as e:
+        st.error(f"Error loading uploaded image: {str(e)}")

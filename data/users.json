@@ -22,5 +22,23 @@
         "name": "Catur Bakti Prajna",
         "email": "2023105533@student.kalbis.ac.id",
         "role": "student"
+    },
+    "2023105513": {
+        "password": "$2b$12$7hEC5Vkgh4/RvIWbPj9rwO.Xc3KHo/yMIjRj60O82H2rDH4MdfjNK",
+        "name": "Joses Tanuwidjaya",
+        "email": "2023105513@student.kalbis.ac.id",
+        "role": "student"
+    },
+    "2023105527": {
+        "password": "$2b$12$hjbgplR1TEjlFUSVFti0ueLCmDcBV/wgjcw4JRpARoScosuEAx4rm",
+        "name": "Chelvin Sefviola Gultom",
+        "email": "2023105527@student.kalbis.ac.id",
+        "role": "student"
+    },
+    "2023105488": {
+        "password": "$2b$12$uSrb4q.32UrC/rsSXqurfOEjnHHol4Mmt73Fo4Wz7gavy4J/FwOtS",
+        "name": "Michelle Hiu",
+        "email": "2023105488@student.kalbis.ac.id",
+        "role": "student"
     }
 }
