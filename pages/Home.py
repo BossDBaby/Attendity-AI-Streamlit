@@ -28,7 +28,7 @@ st.subheader("Welcome to your Class Dashboard")
 
 # 📅 Dummy class schedule
 subjects = [
-    ("UI/UX", "09:30 AM"),
+    ("UI-UX", "09:30 AM"),
     ("Project", "10:40 AM"),
     ("AI", "11:45 AM"),
     ("Cyber Security", "12:10 PM"),
