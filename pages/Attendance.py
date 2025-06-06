@@ -11,7 +11,7 @@ import cv2
 st.set_page_config(page_title="Attendance - Attendity")
 
 # Constants
-FACE_MATCH_THRESHOLD = 0.6  # Smaller is stricter
+FACE_MATCH_THRESHOLD = 0.5  # Smaller is stricter
 
 # 🔒 Authentication check
 if not st.session_state.get("logged_in"):
@@ -92,7 +92,7 @@ def process_face_image(image_np):
             distance = face_recognition.face_distance([user_encoding], uploaded_encoding)[0]
             confidence = 1 - distance
 
-            if distance <= FACE_MATCH_THRESHOLD:
+            if confidence >= FACE_MATCH_THRESHOLD:
                 now = datetime.now()
                 now_str = now.strftime("%Y-%m-%d %H:%M:%S")
                 today = now.date()
