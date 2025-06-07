@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from streamlit_extras.stylable_container import stylable_container
+from utils.auth import get_user_subjects
 
 # 🛠 Page config
 st.set_page_config(page_title="Home - Attendity", layout="centered")
@@ -9,34 +10,32 @@ st.set_page_config(page_title="Home - Attendity", layout="centered")
 if not st.session_state.get("logged_in"):
     st.switch_page("pages/Login.py")
 
-# 🚪 Logout button
+# 🧠 Retrieve session values
+user_id = st.session_state.get("user_id")
+user_name = st.session_state.get("name", st.session_state.get("username", "User"))
+user_role = st.session_state.get("role", "student")
+is_admin = st.session_state.get("is_admin", False)
+
+# 🚪 Sidebar navigation
 st.sidebar.markdown("### Account")
 st.sidebar.button("🔓 Log Out", on_click=lambda: [st.session_state.clear(), st.rerun()])
 st.sidebar.page_link("pages/Home.py", label="Home", icon="🏠")
 st.sidebar.page_link("pages/History.py", label="History", icon="📊")
 
-# 🛠 Admin tools (only if admin)
-if st.session_state.get("is_admin"):
+# 🛠 Admin tools
+if is_admin:
     st.sidebar.divider()
     st.sidebar.markdown("### Admin Section")
     st.sidebar.page_link("pages/Admin.py", label="Admin Panel", icon="🛠")
 
-# 👋 Welcome user
-full_name = st.session_state.get("name", st.session_state.get("username", "User"))
-st.title(f"Hi, {full_name} 👋")
+# 👋 Greeting
+st.title(f"Hi, {user_name} 👋")
 st.subheader("Welcome to your Class Dashboard")
 
-# 📅 Dummy class schedule
-subjects = [
-    ("UI-UX", "09:30 AM"),
-    ("Project", "10:40 AM"),
-    ("AI", "11:45 AM"),
-    ("Cyber Security", "12:10 PM"),
-    ("Ethical Hacking", "12:45 PM"),
-    ("Software Engineering", "13:30 PM")
-]
+# 🧾 Get user subjects from database
+subjects = get_user_subjects(user_id, user_role) if user_id else []
 
-# 📘 Styled Subject Table
+# 📘 Styled Subject List
 st.markdown("### 📘 Today's Schedule")
 
 for subject, time in subjects:
@@ -62,3 +61,6 @@ for subject, time in subjects:
         if st.button(f"📘 {subject} ({time})", key=f"btn_{subject}"):
             st.session_state["selected_subject"] = subject
             st.switch_page("pages/Attendance.py")
+
+if not subjects:
+    st.warning("No subjects found for this user. Please contact admin.")

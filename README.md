@@ -17,5 +17,18 @@ Photos of the student is save on assets folder using this format: `assets/user_p
 
 ## 🛠 Setup Instructions
 
-pip install -r requirements.txt
-streamlit run app.py
+1. Clone the repository
+2. Create a virtual environment and activate it
+3. Install the required dependencies using `pip install -r requirements.txt`
+4. Run the app using `streamlit run app.py`
+
+## 📝 Usage
+
+1. Go to the `Home` page and log in using your credentials
+2. Go to the `Attendance` page and select the subject you want to check in for
+3. Take a picture of your face using the webcam or upload a photo of your face
+4. The app will check if your face matches with the known student photos and mark your attendance if it does
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!

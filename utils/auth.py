@@ -1,44 +1,42 @@
-import json
-import os
 import bcrypt
+from config.database import db_manager
+from models.attendance_models import User, Subject  # ✅ Fixed import
 
-USERS_FILE = "data/users.json"
+def authenticate_user(username, password):
+    """Database-based authentication"""
+    session = db_manager.get_session()
+    try:
+        user = session.query(User).filter(User.username == username).first()
+        if user and bcrypt.checkpw(password.encode('utf-8'), user.password_hash.encode('utf-8')):
+            return {
+                "user_id": user.id,
+                "username": user.username,
+                "name": user.name,
+                "role": user.role,
+                "email": user.email
+            }
+        return None
+    finally:
+        session.close()
 
-def load_users():
-    if not os.path.exists(USERS_FILE):
-        save_users({})
-        return {}
-    with open(USERS_FILE, "r") as file:
-        try:
-            return json.load(file)
-        except json.JSONDecodeError:
-            print("Error decoding the JSON file. Returning an empty user list.")
-            return {}
+def get_user_subjects(user_id, role):
+    session = db_manager.get_session()
+    try:
+        if role == "admin":
+            subjects = session.query(Subject).all()
+        elif role == "teacher":
+            subjects = session.query(Subject).filter(Subject.teacher_id == user_id).all()
+        else:  # student
+            student = session.query(User).filter(User.id == user_id).first()
+            if student and student.major_id:
+                subjects = session.query(Subject).filter(Subject.major_id == student.major_id).all()
+            else:
+                subjects = []
+        return [(s.name, s.schedule_time) for s in subjects]
+    finally:
+        session.close()
 
-def save_users(users):
-    os.makedirs(os.path.dirname(USERS_FILE), exist_ok=True)
-    with open(USERS_FILE, "w") as file:
-        json.dump(users, file, indent=4)
-
-def hash_password(password):
-    salt = bcrypt.gensalt()
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
-    return hashed_password.decode('utf-8')
-
-def login_user(username, password, users):
-    if username in users:
-        hashed_password = users[username]["password"].encode('utf-8')
-        if bcrypt.checkpw(password.encode('utf-8'), hashed_password):
-            return True
-    return False
-
-def add_user(username, password, role="student"):
-    users = load_users()
-    if username in users:
-        return False
-    users[username] = {
-        "password": hash_password(password),
-        "role": role
-    }
-    save_users(users)
-    return True
+def hash_password(password: str) -> str:
+    """Hash a plaintext password using bcrypt and return the hashed string."""
+    hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    return hashed.decode('utf-8')
