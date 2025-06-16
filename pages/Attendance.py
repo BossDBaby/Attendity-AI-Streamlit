@@ -169,9 +169,11 @@ def extract_face_encodings_with_padding(image_np, padding=PADDING):
             encodings.append(face_encs[0])
     return encodings
 
-def is_match(known_encoding, unknown_encoding, threshold=FACE_MATCH_THRESHOLD):
-    distance = np.linalg.norm(known_encoding - unknown_encoding)
-    return distance < threshold, 1 - distance  # (bool match, confidence)
+# def is_match(known_encoding, unknown_encoding, threshold=FACE_MATCH_THRESHOLD):
+#     distance = np.linalg.norm(known_encoding - unknown_encoding)
+#     confidence = 1 - distance
+#     return distance < threshold, confidence, distance
+#   # (bool match, confidence)
 
 def process_face_image(image_np):
     try:
@@ -188,9 +190,11 @@ def process_face_image(image_np):
                 return
 
             uploaded_encoding = face_encodings[0]
-            match, confidence = is_match(user_encoding, uploaded_encoding)
+            
+            distance = face_recognition.face_distance([user_encoding], uploaded_encoding)[0]
+            confidence = 1 - distance
 
-            if match:
+            if confidence >= FACE_MATCH_THRESHOLD:
                 now = datetime.now()
                 today = now.date()
 
