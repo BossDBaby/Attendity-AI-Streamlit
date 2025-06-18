@@ -1,11 +1,22 @@
+# Essential build tools
 build-essential
 cmake
+make
+
+# BLAS/LAPACK (optimized for dlib)
 libopenblas-dev
-libblas-dev
+liblapack-dev
+libatlas-base-dev
+
+# Image processing libraries
 libjpeg-dev
 libpng-dev
 libtiff-dev
-liblapack-dev
-libboost-dev
-libboost-system-dev
-libboost-python-dev
+libwebp-dev
+
+# Python development
+python3-dev
+python3-pip
+
+# Boost (required for dlib's Python bindings)
+libboost-all-dev
