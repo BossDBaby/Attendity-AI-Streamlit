@@ -3,3 +3,9 @@ build-essential
 libboost-all-dev
 libopenblas-dev
 liblapack-dev
+libatlas-base-dev
+libgl1-mesa-glx
+libgtk2.0-dev
+libsm6
+libxext6
+libxrender-dev
