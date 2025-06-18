@@ -1,6 +1,11 @@
-libboost-dev
-libblas-dev
-liblapack-dev
-cmake
 build-essential
+cmake
 libopenblas-dev
+libblas-dev
+libjpeg-dev
+libpng-dev
+libtiff-dev
+liblapack-dev
+libboost-dev
+libboost-system-dev
+libboost-python-dev
