@@ -1,57 +1,30 @@
-# ===== DEPENDENCY VERIFICATION =====
 import os
 import sys
 import subprocess
 import warnings
 
-# List of required packages with versions
-REQUIRED_PACKAGES = {
-    'sqlalchemy': '2.0.41',
-    'greenlet': '2.0.2',
-    'streamlit_extras': '0.7.1',
-    'keras': '2.15.0',
-    'tensorflow': '2.15.0',
-    'protobuf': '5.27.3',
-    'dlib': '19.24.0',
-    'opencv-python': '4.11.0.86',
-    'face_recognition': '1.3.0'
-}
+def ensure_package(package, version=None, install_cmd=None):
+    try:
+        __import__(package)
+    except ImportError:
+        warnings.warn(f"{package} not found! Installing now...")
+        if not install_cmd:
+            install_cmd = [sys.executable, "-m", "pip", "install", f"{package}=={version}"]
+        subprocess.run(install_cmd, check=True)
 
-def ensure_packages():
-    for pkg, version in REQUIRED_PACKAGES.items():
-        try:
-            __import__(pkg)
-        except ImportError:
-            warnings.warn(f"{pkg} not found, installing now...")
-            subprocess.check_call([
-                sys.executable, 
-                "-m", 
-                "pip", 
-                "install", 
-                f"{pkg}=={version}"
-            ])
+# Verify SQLAlchemy and greenlet first
+ensure_package("sqlalchemy", "2.0.41")
+ensure_package("greenlet", "2.0.2")
 
-# Special handling for MTCNN
-try:
-    from mtcnn import MTCNN
-except ImportError:
-    subprocess.check_call([
-        sys.executable, 
-        "-m", 
-        "pip", 
-        "install", 
-        "git+https://github.com/ipazc/mtcnn.git"
-    ])
+# Verify MTCNN
+ensure_package("mtcnn", install_cmd=[sys.executable, "-m", "pip", "install", "git+https://github.com/ipazc/mtcnn.git"])
 
-# Verify critical packages before other imports
-ensure_packages()
-# ===== END DEPENDENCY VERIFICATION =====
-
+# Now import streamlit and continue with your app
 import streamlit as st
 
 st.set_page_config(page_title="Attendity", layout="centered")
 
-# Initialize session state
+# Rest of your original app.py code...
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 if "username" not in st.session_state:
@@ -61,7 +34,6 @@ if "is_admin" not in st.session_state:
 if "name" not in st.session_state:
     st.session_state.name = None
 
-# 🔁 Route user to the appropriate page
 if st.session_state.logged_in:
     if st.session_state.is_admin:
         st.switch_page("pages/Admin.py")
