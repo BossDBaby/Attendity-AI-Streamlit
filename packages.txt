@@ -1,5 +1,5 @@
 cmake
 build-essential
-libboost-all-dev
+libboost-dev
 libopenblas-dev
 liblapack-dev
