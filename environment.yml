@@ -1,0 +1,40 @@
+name: attendity
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  # Use Python 3.9 for better dlib compatibility
+  - python=3.9.18
+
+  # System dependencies (updated versions)
+  - cmake=3.26.4
+  - boost=1.81.0
+  - openblas=0.3.23
+  - liblapack=3.9.0
+
+  # Core Python packages
+  - numpy=1.24.3
+  - pandas=2.2.3
+  - sqlalchemy=2.0.41
+  - greenlet=2.0.2
+  - python-dotenv=1.1.0
+  - typing-extensions=4.8.0
+
+  # Streamlit stack
+  - streamlit=1.45.1
+  - streamlit-extras=0.6.0 # Matches your requirements
+  - watchdog=3.0.0
+
+  # Computer vision (conda-forge versions)
+  - opencv=4.11.0
+  - dlib=19.24.0
+
+  # Pip packages
+  - pip:
+      - face-recognition==1.3.0
+      - mtcnn @ git+https://github.com/ipazc/mtcnn.git
+      - keras-vggface==0.6
+      - tensorflow-cpu==2.15.1
+      - keras==2.15.0
+      - protobuf==4.25.3 # Matches tensorflow 2.15.x requirement
+      - pillow==11.2.1
