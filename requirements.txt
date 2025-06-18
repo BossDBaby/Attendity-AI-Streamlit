@@ -18,7 +18,7 @@ mtcnn @ git+https://github.com/ipazc/mtcnn.git
 keras-vggface==0.6
 tensorflow-cpu==2.15.0
 keras==2.15.0
-protobuf==5.27.3
+protobuf>=3.20.3,<5.0.0  # Changed from 5.27.3 to be compatible with tensorflow
 
 # Numerical computing
 numpy==1.24.3
