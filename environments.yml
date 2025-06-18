@@ -4,8 +4,15 @@ channels:
   - defaults
 dependencies:
   # Core Python
-  - python=3.10.18
-  - pip=23.3.1
+  - python=3.10.17
+  - pip=23.1.2
+
+  # Face recognition stack (installed via conda)
+  - mtcnn=0.1.1
+
+  # Face recognition stack
+  - keras=2.15.0
+  - tensorflow=2.15.0
 
   # Database and ORM (installed via conda)
   - sqlalchemy=2.0.41
