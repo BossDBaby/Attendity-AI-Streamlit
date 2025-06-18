@@ -3,28 +3,31 @@ import sys
 import subprocess
 import warnings
 
-def ensure_package(package, version=None, install_cmd=None):
+def install_and_import(package, version=None, pip_name=None):
+    """Install package if not found and import it"""
+    import_name = pip_name or package
     try:
-        __import__(package)
+        return __import__(import_name)
     except ImportError:
         warnings.warn(f"{package} not found! Installing now...")
-        if not install_cmd:
-            install_cmd = [sys.executable, "-m", "pip", "install", f"{package}=={version}"]
-        subprocess.run(install_cmd, check=True)
+        pip_package = f"{package}=={version}" if version else package
+        subprocess.check_call([
+            sys.executable, "-m", "pip", "install", 
+            "--ignore-installed",  # Force reinstall if needed
+            pip_package
+        ])
+        return __import__(import_name)
 
-# Verify SQLAlchemy and greenlet first
-ensure_package("sqlalchemy", "2.0.41")
-ensure_package("greenlet", "2.0.2")
+# Install and verify SQLAlchemy first
+sqlalchemy = install_and_import("sqlalchemy", "2.0.41")
+install_and_import("greenlet", "2.0.2")
 
-# Verify MTCNN
-ensure_package("mtcnn", install_cmd=[sys.executable, "-m", "pip", "install", "git+https://github.com/ipazc/mtcnn.git"])
-
-# Now import streamlit and continue with your app
+# Now import streamlit and other packages
 import streamlit as st
 
+# Rest of your original app.py code
 st.set_page_config(page_title="Attendity", layout="centered")
 
-# Rest of your original app.py code...
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 if "username" not in st.session_state:
