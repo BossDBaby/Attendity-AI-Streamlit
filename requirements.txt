@@ -10,7 +10,7 @@ watchdog==3.0.0
 
 # Computer Vision 
 opencv-python-headless==4.11.0.86
-dlib==19.24.2 --only-binary :all:
+dlib==19.24.0
 face-recognition==1.3.0
 mtcnn @ git+https://github.com/ipazc/mtcnn.git
 keras-vggface==0.6
