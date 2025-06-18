@@ -5,7 +5,8 @@ channels:
 dependencies:
   - python=3.10.17
   - pip=23.3.1
-  - numpy=2.1.3
+  # Core dependencies via conda
+  - numpy=1.24.3
   - pandas=2.2.3
   - cmake=4.0.2
   - bcrypt=4.3.0
@@ -14,14 +15,17 @@ dependencies:
   - libboost
   - libblas
   - liblapack
+  # Pip packages
   - pip:
       - streamlit==1.45.1
       - streamlit-extras==0.7.1
       - dlib==19.24.0
       - opencv-python==4.11.0.86
-      - tensorflow==2.19.0
+      - tensorflow-cpu==2.19.0
       - face_recognition==1.3.0
-      - mtcnn==1.0.0
-      - typing-extensions==4.4.0
-      - greenlet==2.0.2
+      - mtcnn==0.1.1
+      - keras==2.19.0
+      - keras-vggface==0.7
       - watchdog==2.1.6
+      - greenlet==2.0.2
+      - typing-extensions==4.4.0
